@@ -1,0 +1,60 @@
+[
+  {
+    "path": "examples/hardfloat/add.cadl",
+    "error": "Command '['/usr/bin/curl', '-fLsS', '--connect-timeout', '8', '--max-time', '20', 'https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/examples/hardfloat/add.cadl']' returned non-zero exit status 28."
+  },
+  {
+    "path": "examples/hardfloat/add_mul.cadl",
+    "error": "Command '['/usr/bin/curl', '-fLsS', '--connect-timeout', '8', '--max-time', '20', 'https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/examples/hardfloat/add_mul.cadl']' returned non-zero exit status 28."
+  },
+  {
+    "path": "examples/hardfloat/bf16_gemm/gemm.cadl",
+    "error": "Command '['/usr/bin/curl', '-fLsS', '--connect-timeout', '8', '--max-time', '20', 'https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/examples/hardfloat/bf16_gemm/gemm.cadl']' returned non-zero exit status 28."
+  },
+  {
+    "path": "examples/hardfloat/bf16_gemm/test_gemm.c",
+    "bytes": 5285,
+    "url": "https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/examples/hardfloat/bf16_gemm/test_gemm.c"
+  },
+  {
+    "path": "examples/hardfloat/bf16_gemm/bf16-gemm-rocket.sh",
+    "error": "Command '['/usr/bin/curl', '-fLsS', '--connect-timeout', '8', '--max-time', '20', 'https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/examples/hardfloat/bf16_gemm/bf16-gemm-rocket.sh']' returned non-zero exit status 28."
+  },
+  {
+    "path": "docs/SYNTHESIS/hardfloat-bf16-fp32-acceptance.md",
+    "error": "Command '['/usr/bin/curl', '-fLsS', '--connect-timeout', '8', '--max-time', '20', 'https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/docs/SYNTHESIS/hardfloat-bf16-fp32-acceptance.md']' returned non-zero exit status 28."
+  },
+  {
+    "path": "cadl_frontend/grammar.lark",
+    "bytes": 7872,
+    "url": "https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/cadl_frontend/grammar.lark"
+  },
+  {
+    "path": "cadl_frontend/to_mlir/expr.py",
+    "error": "Command '['/usr/bin/curl', '-fLsS', '--connect-timeout', '8', '--max-time', '20', 'https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/cadl_frontend/to_mlir/expr.py']' returned non-zero exit status 28."
+  },
+  {
+    "path": "cadl_frontend/to_mlir/types.py",
+    "bytes": 1552,
+    "url": "https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/cadl_frontend/to_mlir/types.py"
+  },
+  {
+    "path": "cadl_frontend/to_mlir/memory.py",
+    "bytes": 24879,
+    "url": "https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/cadl_frontend/to_mlir/memory.py"
+  },
+  {
+    "path": "cadl_frontend/to_mlir/stmt.py",
+    "bytes": 8779,
+    "url": "https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/cadl_frontend/to_mlir/stmt.py"
+  },
+  {
+    "path": "hardware/hardfloat/build-hardfloat-ip.sh",
+    "error": "Command '['/usr/bin/curl', '-fLsS', '--connect-timeout', '8', '--max-time', '20', 'https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/hardware/hardfloat/build-hardfloat-ip.sh']' returned non-zero exit status 28."
+  },
+  {
+    "path": "pixi.toml",
+    "bytes": 5839,
+    "url": "https://raw.githubusercontent.com/pku-eric-golem/aquas/f9348236162ad6133c74fc83169cf83f000e6543/pixi.toml"
+  }
+]

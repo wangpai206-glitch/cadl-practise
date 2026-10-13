@@ -1,0 +1,127 @@
+{
+  "created_date": "2026-10-07",
+  "basis": "aquas-dev.zip plus read-only Hina source inspection",
+  "hina_observed_branch": "float",
+  "hina_observed_commit": "c8d63ee012fbcb2a1fe0e144372a71c8aea3536c",
+  "checks": [
+    "source syntax review",
+    "peer source review",
+    "offline HTML desktop and mobile rendering",
+    "19 chapter links",
+    "chapter search",
+    "arithmetic slider",
+    "local links",
+    "13 subheadings in chapter 07",
+    "interactive 8-bit mask demonstration 173&15=13 and 182&15=6"
+  ],
+  "cadl_tests_run": false,
+  "synthesis_run": false,
+  "server_modified": false,
+  "last_revision": "2026-10-12: aps-synth speaker-note motivation in chapter 00 and synthesis walkthrough in chapter 36",
+  "latest_hina_observed_commit": "f9348236162ad6133c74fc83169cf83f000e6543",
+  "remote_default_note": "Local origin/HEAD points to origin/aspdac. Live query of aquas remote HEAD timed out; not inferred.",
+  "float_revision": {
+    "updated_date": "2026-10-09",
+    "upstream_repository": "https://github.com/pku-eric-golem/aquas",
+    "upstream_branch": "float",
+    "upstream_head_verified_live": "f9348236162ad6133c74fc83169cf83f000e6543",
+    "verification_method": "GitHub connector branch endpoint and source file reads",
+    "hina_today": "SSH timed out twice; no current checkout inspection",
+    "local_fp32_source": "/Users/wangpaismacbook/Desktop/Golem/smolvla_cadl_float",
+    "new_chapters": [
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27
+    ],
+    "executed_cadl_or_hardware_tests": false,
+    "changes": "Appended floating-point course, corrected integer-only scope, preserved previous user edits",
+    "checks": [
+      "10 upstream source files match Git blob SHA exactly",
+      "27 chapters and navigation entries",
+      "all rendered tutorial local file links exist",
+      "desktop 1440px and mobile 390px have no page overflow",
+      "chapter search works",
+      "existing bitwise lab still works",
+      "no browser JavaScript errors",
+      "original chapters preserved except 5 targeted floating-point scope edits"
+    ]
+  },
+  "hardware_docs_revision": {
+    "date": "2026-10-09",
+    "chapters": [
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+    ],
+    "basis": [
+      "4 original ZIP docs",
+      "pinned float HardFloat acceptance and Rocket script",
+      "local FP32 bridge.c and gemm.cadl",
+      "Chipyard RoCC and RISC-V memory-ordering official references"
+    ],
+    "changes": [
+      "added docs coverage map and old-document caveats",
+      "explained host/target CPU, registers/cache/SPM, RoCC commands and responses",
+      "added concrete four-tile FP32 DMA address example",
+      "explained handshakes, FIFO, fence and completion separately",
+      "clarified hardware compilation and verification layers",
+      "corrected prior stride_y explanation"
+    ],
+    "checks": {
+      "chapters": 35,
+      "navigation_links": 35,
+      "tutorial_local_links": "passed",
+      "ready_valid_interaction": "passed",
+      "data_journey_steps": 8,
+      "chapter_search": "passed",
+      "old_bit_demo": "passed",
+      "desktop_1440px": "no overflow",
+      "mobile_390px": "no overflow",
+      "javascript_errors": 0,
+      "visual_review": "desktop and mobile screenshots inspected",
+      "source_review": "two independent read-only audits"
+    },
+    "cadl_or_hardware_tests_run": false,
+    "server_modified": false
+  },
+  "aps_synth_revision": {
+    "date": "2026-10-12",
+    "source": "/Users/wangpaismacbook/Desktop/Golem/aps-synth.pptx",
+    "source_sha256": "7e0482d3d4287de257e5defa018f8e267d57f23bd6ed32b4989fe1d3c2d99e8c",
+    "slides_read": 32,
+    "substantive_notes_read": 29,
+    "blank_notes_pages": [
+      1,
+      2,
+      6
+    ],
+    "intro": "Chapter 00 before all original chapters; based on 1–8 plus 9",
+    "supplement": "Chapter 36 covers slides 9–32",
+    "existing_chapters_01_to_35": "preserved byte-for-byte excluding boundary whitespace",
+    "source_pptx_modified": false,
+    "cadl_or_hardware_tests_run": false,
+    "reader_checks": {
+      "chapters": 37,
+      "first": "lesson-0",
+      "last": "lesson-36",
+      "missing": [],
+      "badAnchors": [],
+      "brokenImages": [],
+      "searchMatches": 1,
+      "desktopOverflow": false,
+      "mobileOverflow": false,
+      "errors": [],
+      "oldInteractiveExamples": "passed"
+    }
+  }
+}

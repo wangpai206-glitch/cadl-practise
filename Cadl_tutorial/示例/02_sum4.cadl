@@ -1,0 +1,11 @@
+#[opcode(7'b0101011)]
+#[funct7(7'b0000001)]
+rtype sum4(rs1: u5, rs2: u5, rd: u5) {
+  let value: u32 = _irf[rs1];
+  with i: u32 = (0, i_next)
+       acc: u32 = (0, acc_next) do {
+    let acc_next: u32 = acc + value;
+    let i_next: u32 = i + 1;
+  } while (i_next < 4);
+  _irf[rd] = acc;
+}

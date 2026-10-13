@@ -1,0 +1,18 @@
+// Educational example. Not runtime-validated. Mathematical expected result: 70.
+static A: [i8; 4];
+static B: [i8; 4];
+
+#[opcode(7'b0101011)]
+#[funct7(7'b0000010)]
+rtype dot4(rs1: u5, rs2: u5, rd: u5) {
+  A[0] = 1; A[1] = 2; A[2] = 3; A[3] = 4;
+  B[0] = 5; B[1] = 6; B[2] = 7; B[3] = 8;
+  with k: u32 = (0, k_next)
+       acc: i32 = (0, acc_next) do {
+    let a: i32 = A[k];
+    let b: i32 = B[k];
+    let acc_next: i32 = acc + a * b;
+    let k_next: u32 = k + 1;
+  } while (k_next < 4);
+  _irf[rd] = acc;
+}

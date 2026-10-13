@@ -1,0 +1,130 @@
+[workspace]
+authors = ["uv-xiao <shallwexiao@gmail.com>"]
+channels = ["conda-forge", "weijiepeng"]
+name = "aps-mlir"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[activation.env]
+CIRCT_COMMIT = "cmt2-edsl"
+PYTHONPATH = "${PIXI_PROJECT_ROOT}:${PIXI_PROJECT_ROOT}/megg:${PIXI_PROJECT_ROOT}/build/python_packages/circt_core:${PYTHONPATH}"
+PATH = "${PIXI_PROJECT_ROOT}/circt/build/bin:${PATH}:${PIXI_PROJECT_ROOT}/thirdparty/polygeist"
+MEGGINCLUDE = "${PIXI_PROJECT_ROOT}/megg/megg_include" # put extra include files for megg here
+# Chipyard is not compatable with new firtool, so we have to use a pre-built binary from github release
+LEGACY_FIRTOOL_PATH = "https://github.com/llvm/circt/releases/download/firtool-1.75.0/firrtl-bin-linux-x64.tar.gz"
+LEGACY_FIRTOOL = "${PIXI_PROJECT_ROOT}/thirdparty/firtool-1.75.0/bin/firtool" # this is for chipyard compatibility
+# tutorial docker environment
+APS = "${PIXI_PROJECT_ROOT}"
+APS_CHIPYARD = "${PIXI_PROJECT_ROOT}/thirdparty/chipyard"
+APS_SIM = "${APS_CHIPYARD}/sims/verilator"
+APS_VLSI = "${APS_CHIPYARD}/nextvlsi"
+
+[tasks]
+# Build CIRCT and APS toolchain
+setup = { cmd = "test -f __setup.success || (chmod +x scripts/setup.sh && scripts/setup.sh \"$CIRCT_COMMIT\")" }
+build = { cmd = "bash scripts/build.sh", depends-on = ["setup"]}
+clean = { cmd = "rm -rf build"}
+
+# Prepare Chipyard environment
+setup-yosys-slang = { cmd = "test -f __setup-yosys-slang.success || (bash scripts/setup-yosys-slang.sh && touch __setup-yosys-slang.success)" }
+setup-verilator = { cmd = "test -f \"$CONDA_PREFIX/.aps-setup-verilator.success\" || (sed -i -e 's|^AR *= *.*|AR = /usr/bin/ar|' -e 's|^CXX *= *.*|CXX = /usr/bin/g++|' -e 's|^LINK *= *.*|LINK = /usr/bin/g++|' \"$CONDA_PREFIX/share/verilator/include/verilated.mk\" && touch \"$CONDA_PREFIX/.aps-setup-verilator.success\")" }
+setup-firtool = { cmd = "test -x \"$LEGACY_FIRTOOL\" || (mkdir -p thirdparty && cd thirdparty && wget -O firtool.tar.gz \"$LEGACY_FIRTOOL_PATH\" && tar xvzf firtool.tar.gz && rm firtool.tar.gz)"}
+setup-chipyard = { cmd = "git submodule update --init && cd thirdparty/chipyard && bash ./scripts/init-submodules-no-riscv-tools-nolog.sh && bash ./scripts/build-toolchain-extra-32.sh -p \"$RISCV\"", depends-on = ["setup-yosys-slang", "setup-verilator", "setup-firtool"]}
+check-chipyard = { cmd = "test -f thirdparty/chipyard/toolchains/riscv-tools/riscv-pk/README.md"}
+# or, install extra RISC-V tools after after submodule init with
+setup-chipyard-riscv-extra = { cmd = "cd thirdparty/chipyard && bash ./scripts/build-toolchain-extra-32.sh -p \"$RISCV\"", depends-on = ["check-chipyard", "setup-yosys-slang", "setup-verilator", "setup-firtool"]}
+
+# Python execution with CIRCT bindings
+python = { cmd = "python" }
+pytest = { cmd = "python -m pytest -s -v" }
+
+# Tutorial Demo
+tutorial-compiler-demo = { cmd = "streamlit run tutorial/compiler/hands_on.py --server.headless true" }
+
+# CADL Frontend
+[tasks.mlir]
+args = ["cadl", "apsir"]
+cmd =  "$PIXI_PROJECT_ROOT/tools/aps-frontend mlir {{ cadl }} > {{ apsir }}"
+
+# HLS Synthesis Engine
+[tasks.syn]
+args = [{ arg = "apsir" }, { arg = "output" }, { arg = "extra_args", default = "" }]
+cmd = "build/tools/aps-opt/aps-e2e --clock 4.0 -i {{ apsir }} -o {{ output }} {{ extra_args }} --export sv"
+
+[tasks.syn-debug]
+args = [{ arg = "apsir" }, { arg = "output" }, { arg = "log" }, { arg = "extra_args", default = "" }]
+cmd = "build/tools/aps-opt/aps-e2e --clock 4.0 -i {{ apsir }} -o {{ output }} {{ extra_args }} --export sv --print-ir-after-all 2> {{ log }}"
+
+# Megg Retargetable Compiler
+[tasks.compile]
+args = [{ arg = "cadl" }, { arg = "test_c" }, { arg = "output" }, { arg = "extra_args", default = "" }]
+cmd = "tools/aps-megg compile {{ cadl }} {{ test_c }} {{ output }} {{ extra_args }}"
+
+[tasks.compile-handson]
+args = ["cadl", "test_c", "output"]
+cmd = "tools/aps-megg compile {{ cadl }} {{ test_c }} {{ output }} --handson"
+
+[tasks.compile-native]
+args = ["test_c", "output"]
+cmd = "riscv32-unknown-elf-gcc -std=gnu99 -O3 -Wall -Wextra -fno-common -fno-builtin-printf -march=rv32imaf_zicsr_zifencei -mabi=ilp32f -mcmodel=medany -specs=htif_nano.specs -static -T htif.ld -I$MEGGINCLUDE -o {{ output }} {{ test_c }} -lm"
+
+[tasks.build-hardfloat-ip]
+cmd = "mkdir -p build/hardfloat && cd build/hardfloat && bash ../../hardware/hardfloat/build-hardfloat-ip.sh --resource-output=resource.json"
+
+[tasks.hardfloat-acceptance]
+cmd = "bash examples/hardfloat/hardfloat-acceptance.sh"
+
+[tasks.bf16-gemm-rocket]
+cmd = "bash examples/hardfloat/bf16_gemm/bf16-gemm-rocket.sh"
+
+# APS Spike + Verilator co-sim
+[tasks.aps-cosim-clean]
+cmd = "make -C $PIXI_PROJECT_ROOT/tools/aps-cosim clean"
+
+[tasks.aps-cosim-run]
+args = [{ arg = "elf" }, { arg = "rtl" }, { arg = "extra_args", default = "" }]
+cmd = "make -j -C tools/aps-cosim run-spike RTL={{ rtl }} ELF={{ elf }} EXTRA_ARGS='{{ extra_args }}' TOP=main"
+depends-on = ["setup-verilator"]
+
+[dependencies]
+cmake = ">=4.1.1,<5"
+python = ">=3.12,<3.13"
+zlib = ">=1.3.1,<2"
+make = ">=4.4.1,<5"
+pyyaml = ">=6.0.2,<7"
+clang = ">=21.1.0,<21.1.5"
+lld = ">=21.1.0,<22"
+nanobind = "2.4.0.*"
+numpy = ">=2.3.3,<3"
+pybind11 = ">=2.10.0,<=2.13.6"
+ml_dtypes = ">=0.5.0,<=0.6.0"
+psutil = ">=7.0.0,<8"
+verilator = ">=5.034"
+setuptools = ">=80.9.0,<81"
+setuptools_scm = ">=9.2.0,<10"
+ninja = ">=1.13.1,<2"
+z3prover = ">=4.15.3,<5"
+sbt = ">=1.10.2,<2"
+openjdk = "20.*"
+lp_solve = ">=5.5.2.11,<6"
+nlohmann_json = ">=3.12.0,<4"
+pip = "*"
+egglog = ">=11.2.0"
+black = "<=25.1.0"
+pytokens = "*"
+riscv-tools = { version = "1.0.6.*", channel = "weijiepeng" }
+iverilog = ">=11.0,<12"
+yosys = ">=0.65"
+jq = ">=1.8.1,<2"
+ortools-cpp = ">=9.1,<10"
+
+[pypi-dependencies]
+lark = ">=1.1.0"
+dataclasses-json = ">=0.6.0"
+pytest = ">=8.4.2,<9"
+pytest-cov = ">=7.0.0, <8"
+isort = ">=6.0.1, <7"
+mypy = ">=1.18.2, <2"
+ruff = ">=0.8.0,<1"
+scour = ">=0.38.2"
+streamlit = ">=1.58.0, <2"

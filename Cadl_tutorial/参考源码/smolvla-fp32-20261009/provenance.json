@@ -1,0 +1,60 @@
+{
+  "module_source": {
+    "archive": "vla-profiling-main (1).zip",
+    "archive_sha256": "b9d80bb76c45229f18e5f988fff906b0cf01cca5672aef1744ddfb983fb26a96",
+    "files": {
+      "modules.py": "fa3f3f48341aebdaac3bf474e7acb3d7d7d89376246e656040d83c5f66ce6f50",
+      "pipeline.py": "abb8107321d7fb4da3a5a89763520492f87e6f3dec748700b4290fc2abf3b5cb",
+      "README.md": "ceb9f50fee273c776376d6ac902c46f81b63dea0896ac14507fda7490b0b4096",
+      "tools/runner.py": "a44177c19fab637d6bb18d5514a2f573e97b792a04344b0007f9e74d49102b57",
+      "tools/riscv.py": "321941fe73afec07a17e935f7e9fcb577ed67c9b19e5f22cc997e97ef16cf253",
+      "tools/instrumentation.py": "9328766b39f7d92efb37101661a0cfed34e0525a964702b5a9bf619fe97651e7",
+      "tools/sources.lock.json": "752d29e3250b8ee9b3315ab6672cb473d9e7b880b01ddfbc78f38db386c4f15a",
+      "configs/vlm.json": "ea6bc1237e96247f6258de3e202e2e62b93d6f386dc47e7b36b5588bf3a15e17",
+      "configs/policy.json": "650584b56c104720f7a3c91d1ec6bec9e8de8ac11e60c92ba2fa82d93eda147d",
+      "configs/chipyard.json": "72fbc6a96d1cef941bcc192333f9fc0bf17a0c54f3fe0407d91e26940752af5f"
+    },
+    "repository": "https://github.com/pku-eric-golem/vla-profiling",
+    "directory": "experiments/smolvla"
+  },
+  "accelerator_source": {
+    "repository": "https://github.com/pku-eric-golem/aquas",
+    "branch_at_capture": "float",
+    "commit": "f9348236162ad6133c74fc83169cf83f000e6543",
+    "cadl_url": "https://github.com/pku-eric-golem/aquas/blob/f9348236162ad6133c74fc83169cf83f000e6543/examples/hardfloat/bf16_gemm/gemm.cadl",
+    "capture_source": "Previously configured and verified hina checkout",
+    "files": {
+      "examples/hardfloat/bf16_gemm/benchmark.c": "b26ff771db31c206130eeea9b7ff8b312b564dc5d844a2694411ed002448fa1f",
+      "examples/hardfloat/bf16_gemm/bf16-gemm-rocket.sh": "88a3463e8586cf7acedb2e0ed15dcff7157f8b17356093c16a45f93bf2f74828",
+      "examples/hardfloat/bf16_gemm/fp32_software.c": "33eff64c6f6dd0fc9922e19e8b157bbe801d753e9c05e9a06989a67d4a61cf06",
+      "examples/hardfloat/bf16_gemm/gemm.cadl": "3f40fdc16d28a83f616aa0792411a4ec7416bb7d09e2719895189a4858bcd8f8",
+      "examples/hardfloat/bf16_gemm/generate_vectors.py": "8a20f148fd1566546207967bd19c758c9eef04a44766a89ffb3d28297910fbcc",
+      "examples/hardfloat/bf16_gemm/summarize_benchmark.py": "a4f43c3de9228c602a6e92550203c3e8be678e7a0e53ebdbdd714626be6f5fd4",
+      "examples/hardfloat/bf16_gemm/test_gemm.c": "6006429fb947003d10157fc38f6e346419d901f8f0735b88f0ed172e13aefde8"
+    }
+  },
+  "retained_derivatives": {
+    "modules.py": "upstream modules.py with explicit external LeRobot source path",
+    "tools/fp32_runner.py": "upstream tools/runner.py restricted to host FP32 validation",
+    "configs/vlm.json": "upstream configuration snapshot",
+    "configs/policy.json": "upstream configuration snapshot",
+    "cadl/gemm.cadl": "FP32 adaptation of pinned AQUAS BF16 example; separately rounded f32 arithmetic, four-tile 128-byte DMA rows"
+  },
+  "accelerator_adaptation": {
+    "precision": "FP32 storage, multiplication and accumulation; RNE; separate multiply/add",
+    "arithmetic_reference": {
+      "path": "examples/hardfloat/add_mul.cadl",
+      "git_blob_sha": "a8703dd8e5b3e57932db58a379a0ee650be79413",
+      "url": "https://github.com/pku-eric-golem/aquas/blob/f9348236162ad6133c74fc83169cf83f000e6543/examples/hardfloat/add_mul.cadl"
+    },
+    "contract_reference": "https://github.com/pku-eric-golem/aquas/blob/f9348236162ad6133c74fc83169cf83f000e6543/docs/SYNTHESIS/hardfloat-bf16-fp32-acceptance.md",
+    "changes": [
+      "matA/matB/matC and accumulator bf16 -> f32; 512 KiB per array",
+      "DMA group 8 -> 4 tiles; each of eight rows transfers 32 FP32 elements (128 bytes)",
+      "stride_x 16 -> 32 bytes; stride_y stays 8; DRAM row pitch stays 128 bytes",
+      "Runtime buffers and arithmetic use float directly; removed BF16 conversion"
+    ],
+    "historical_results": "results/2026-10-08-tiny records the previous BF16 implementation; not FP32 validation",
+    "validation": "results/2026-10-08-fp32-tiny/validation.json: 25 host tests and 10 paired Rocket runs passed"
+  }
+}
